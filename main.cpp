@@ -14,10 +14,10 @@ class Sortings {
 		void bubbleSort(T array[], int arraySize) {
 			bool swapped = true;
 			int j = 0;
-			while(swapped) {
+			while (swapped) {
 				swapped = false;
 				j++;
-				for(int i = 0; i < arraySize-j; i++) {
+				for (int i = 0; i < arraySize-j; i++) {
 					if (array[i] > array[i+1]) {
 						swap(array[i], array[i+1]);
 						swapped = true;
@@ -43,12 +43,54 @@ class Sortings {
 		
 		template<typename T>
 		void selectionSort(T array[], int arraySize) {
-			for(int i = 0; i < arraySize-1; i++) {
+			for (int i = 0; i < arraySize-1; i++) {
 				swap(array[i], array[minimum(array, i, arraySize)]);
 			}
 		}
 		
+		template<typename T>
+		void mergeSort(T array[], int arraySize) {
+			mergeSortRecursively(array, 0, arraySize);
+		}
+		
 	private:
+		template<typename T>
+		void mergeSortRecursively(T array[], int start, int stop) {
+			if (start >= stop - 1)
+				return;
+			
+			int mid = (start + stop) / 2;
+			
+			mergeSortRecursively(array, start, mid);
+			mergeSortRecursively(array, mid, stop);
+			merge(array, start, mid, stop);
+		}
+		
+		template<typename T>
+		void merge(T array[], int start, int mid, int stop) {
+			T buff[stop-start];
+			int i, j ,k;
+			i = start;
+			j = mid;
+			k = 0;
+			
+			while (i < mid && j < stop) {
+				buff[k++] = (array[i] < array[j]) ? array[i++] : array[j++];
+			}
+		
+			while (i < mid) {
+				buff[k++] = array[i++];
+			}
+			
+			while (j < stop) {
+				buff[k++] = array[j++];
+			}
+			
+			for (int i = 0; i < stop-start; i++) {
+				array[start+i] = buff[i];
+			}
+		}
+		
 		template<typename T>
 		int minimum(T array[], int start, int stop) {
 			int m = start;
@@ -83,7 +125,7 @@ int main(int argc, char** argv) {
 	cout << "Initial array: " << endl;
 	printArray(arr, arraySize);
 	
-	sort.selectionSort(arr, arraySize);
+	sort.mergeSort(arr, arraySize);
 	
 	cout << "Sorted array: " << endl;
 	printArray(arr, arraySize);
